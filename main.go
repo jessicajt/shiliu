@@ -14,7 +14,13 @@ func activity(name string, minutes int) (err error) {
 	fmt.Println(name)
 
 	for i := minutes; i > 0; i-- {
-		err = beeep.Notify(name, strconv.Itoa(i)+" minutes left", "")
+		var unit string
+		if i == 1 {
+			unit = "minute"
+		} else {
+			unit = "minutes"
+		}
+		err = beeep.Notify(name, strconv.Itoa(i)+" "+unit+" left", "")
 		if err != nil {
 			return
 		}
@@ -25,7 +31,6 @@ func activity(name string, minutes int) (err error) {
 
 func main() {
 	args := os.Args[1:]
-	fmt.Println(args)
 
 	if len(args) == 0 {
 		fmt.Println("usage: go run main.go [activity1]:[duration1] [activity2]:[duration2] ...")
@@ -37,7 +42,10 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			activity(name, minutes)
+			err = activity(name, minutes)
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
 }
